@@ -24,5 +24,9 @@ module Athena
       end
     end
 
+    def departments
+      Athena::DepartmentCollection.new(@id, @client)
+    end
+
   end
 end

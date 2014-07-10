@@ -46,15 +46,7 @@ module Athena
       PracticeCollection.new(self)
     end
 
-    def get_practice_info
-      response = self.class.get('/1/practiceinfo',
-                                :headers => {
-                                  "Authorization" => "Bearer " + access_token
-                                })
-      response["practiceinfo"].map { |x| Athena::Practice.new(x.merge({ "client" => self })) }
-    end
-
-    def get(route, body => {})
+    def get(route, body = {})
       self.class.get(route, :body => body, :headers => {"Authorization" => "Bearer " + access_token})
     end
 
