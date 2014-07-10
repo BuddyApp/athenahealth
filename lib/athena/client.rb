@@ -1,8 +1,6 @@
 module Athena
   class Client
     include HTTParty
-    debug_output $stdout
-
     HOST = "https://api.athenahealth.com"
 
     attr_reader :client_id, :client_secret, :site, :host, :access_token
@@ -12,8 +10,9 @@ module Athena
       @client_id = client_id
       @client_secret = client_secret
       @site = site
-      self.class.base_uri @host = base_url
+      set_base_uri!
       get_access_token!
+      set_base_uri!
     end
 
     def api_path
@@ -27,8 +26,12 @@ module Athena
       end
     end
 
-    def base_url
-      HOST + api_path
+    def set_base_uri!
+      if access_token.nil?
+        self.class.base_uri HOST + api_path
+      else
+        self.class.base_uri HOST + "/preview1"
+      end
     end
 
     def get_access_token!
@@ -38,5 +41,18 @@ module Athena
 
       @access_token = response["access_token"]
     end
+
+    def practices
+      PracticeCollection.new(self)
+    end
+
+    def get_practice_info
+      response = self.class.get('/1/practiceinfo',
+                                :headers => {
+                                  "Authorization" => "Bearer " + access_token
+                                })
+      response["practiceinfo"].map { |x| Athena::Practice.new(x) }
+    end
+
   end
 end
