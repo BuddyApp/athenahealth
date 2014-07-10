@@ -10,12 +10,11 @@ module Athena
       @client_id = client_id
       @client_secret = client_secret
       @site = site
-      set_base_uri!
       get_access_token!
       set_base_uri!
     end
 
-    def api_path
+    def auth_path
       case site
       when :athenanet
         "/oauth"
@@ -27,17 +26,13 @@ module Athena
     end
 
     def set_base_uri!
-      if access_token.nil?
-        self.class.base_uri HOST + api_path
-      else
-        self.class.base_uri HOST + "/preview1"
-      end
+      self.class.base_uri HOST + "/preview1" # what should this REALLY be?
     end
 
     def get_access_token!
-      response = self.class.post('/token',
-                                 :basic_auth => {:username => client_id, :password => client_secret},
-                                 :body => {:grant_type => "client_credentials"})
+      response = HTTParty.post(HOST + auth_path + '/token',
+                               :basic_auth => {:username => client_id, :password => client_secret},
+                               :body => {:grant_type => "client_credentials"})
 
       @access_token = response["access_token"]
     end
