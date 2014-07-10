@@ -16,6 +16,12 @@ describe Athena::Practice do
       expect(practices.first.id).to be(@cnf['athena']['default_practice_id'])
     end
 
+    it "should be able to fetch a single practice" do
+      practice = @client.practices.find @cnf['athena']['default_practice_id']
+      expect(practice).to be_kind_of(Athena::Practice)
+      expect(practice.id).to be(@cnf['athena']['default_practice_id'])
+    end
+
   end
 
 end

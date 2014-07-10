@@ -51,7 +51,11 @@ module Athena
                                 :headers => {
                                   "Authorization" => "Bearer " + access_token
                                 })
-      response["practiceinfo"].map { |x| Athena::Practice.new(x) }
+      response["practiceinfo"].map { |x| Athena::Practice.new(x.merge({ "client" => self })) }
+    end
+
+    def get(route, body => {})
+      self.class.get(route, :body => body, :headers => {"Authorization" => "Bearer " + access_token})
     end
 
   end

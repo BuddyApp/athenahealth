@@ -1,8 +1,6 @@
 module Athena
   class Practice
-    "{\"totalcount\":1,\"practiceinfo\":[{\"hascommunicator\":\"true\",\"iscoordinatorsender\":\"false\",\"iscoordinatorreceiver\":\"false\",\"hasclinicals\":\"true\",\"name\":\"MDP-Enterprise Scheduling Test\",\"hascollector\":\"true\",\"practiceid\":\"195900\"}]}"
-
-    attr_reader :id, :name, :has_communicator, :is_coordinator_sender, :is_coordinator_receiver, :has_clinicials, :has_collector
+    attr_reader :id, :name, :has_communicator, :is_coordinator_sender, :is_coordinator_receiver, :has_clinicials, :has_collector, :client
 
     def initialize(opts)
       @id = opts["practiceid"].to_i
@@ -11,6 +9,7 @@ module Athena
       @is_coordinator_sender = to_boolean opts["iscoordinatorsender"]
       @has_clinicals = to_boolean opts["hasclinicals"]
       @has_collector = to_boolean opts["hascollector"]
+      @client = opts["client"]
     end
 
     def to_boolean(str)
